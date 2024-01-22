@@ -90,7 +90,7 @@ fn App(cx: Scope) -> Element {
         // Otherwise, use the current input.
         push_lhs();
         // Ensure the user will type the RHS afterwards.
-        // Otherwise, use the LHS (still displayed if the user doesn't tyep) as RHS.
+        // Otherwise, use the LHS (still displayed if the user doesn't type) as RHS.
         input_should_clear.set(true);
         operation.set(Some(op));
     };
