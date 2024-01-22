@@ -13,6 +13,7 @@ enum Op {
     Sub,
     Mul,
     Div,
+    Pow,
 }
 
 impl Op {
@@ -23,6 +24,10 @@ impl Op {
             Self::Sub => lhs.saturating_sub(rhs),
             Self::Mul => lhs.saturating_mul(rhs),
             Self::Div => lhs.saturating_div(rhs),
+            Self::Pow => match u32::try_from(rhs) {
+                Ok(exp) => lhs.saturating_pow(exp),
+                Err(_) => 0,
+            },
         }
     }
 }
@@ -221,7 +226,8 @@ fn App(cx: Scope) -> Element {
                 button {
                     background_color: "blue",
                     color: "white",
-                    " "
+                    onclick: move |_| push_op(Op::Pow),
+                    "**"
                 }
             }
         }
