@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 // import the prelude to get access to the `rsx!` macro and the `Scope` and `Element` types
 use dioxus::{html::input_data::keyboard_types::Key, prelude::*};
+use dioxus_desktop::use_window;
 
 fn main() {
     // launch the dioxus app in a webview
@@ -34,6 +35,8 @@ impl Op {
 
 // define a component that renders a div with the text "Hello, world!"
 fn App(cx: Scope) -> Element {
+    let window = use_window(cx);
+    window.set_title("Calculator");
     // Currently visible input.
     let input = use_state::<i64>(cx, || 0);
     // If input should be cleared on the next digit.
@@ -93,6 +96,7 @@ fn App(cx: Scope) -> Element {
     };
     cx.render(rsx! {
         div {
+            h1 { "Calculator" }
             p {
                 "Type it"
             }
