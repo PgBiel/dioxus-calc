@@ -7,9 +7,58 @@ fn main() {
     dioxus_desktop::launch(App);
 }
 
+#[derive(Clone, Copy)]
+enum Op {
+    Add,
+    Sub,
+    Mul,
+    Div,
+}
+
+impl Op {
+    /// Applies this operation on the two operands, returning the operation's result.
+    fn apply(self, lhs: i64, rhs: i64) -> i64 {
+        match self {
+            Self::Add => lhs.saturating_add(rhs),
+            Self::Sub => lhs.saturating_sub(rhs),
+            Self::Mul => lhs.saturating_mul(rhs),
+            Self::Div => lhs.saturating_div(rhs),
+        }
+    }
+}
+
 // define a component that renders a div with the text "Hello, world!"
 fn App(cx: Scope) -> Element {
+    // Currently visible input.
     let input = use_state::<i64>(cx, || 0);
+    // Currently selected operation.
+    let operation = use_state::<Option<Op>>(cx, || None);
+    // When an operation is in progress, this temporarily stores the LHS. The RHS will be taken from 'input'.
+    let lhs = use_state::<Option<i64>>(cx, || None);
+    // Push the current input to LHS.
+    let push_lhs = || lhs.set(Some(*input.get()));
+    // Cancels the currently selected operation.
+    let reset_op = || {
+        operation.set(None);
+        lhs.set(None);
+    };
+    // Applies the current operation between the current LHS and the input as RHS, if possible.
+    let apply_op = move || {
+        if let Some((op, lhs)) = (*operation.get()).zip(*lhs.get()) {
+            let rhs = *input.get();
+            input.set(op.apply(lhs, rhs));
+            reset_op();
+        }
+    };
+    let push_op = move |op: Op| {
+        apply_op();
+        // Use the output from the previous operation (if any) as the next's LHS.
+        // Otherwise, use the current input.
+        push_lhs();
+        // reset input (temp solution)
+        input.set(0);
+        operation.set(Some(op));
+    };
     cx.render(rsx! {
         div {
             p {
@@ -109,9 +158,10 @@ fn App(cx: Scope) -> Element {
                 },
                 button {
                     onclick: move |_| {
+                        // Remove last digit
                         input.set(input.get() / 10);
                     },
-                    "R"
+                    "D"
                 },
                 button {
                     onclick: move |_| {
@@ -121,17 +171,44 @@ fn App(cx: Scope) -> Element {
                     "0"
                 },
                 button {
+                    onclick: move |_| {
+                        apply_op();
+                    },
                     "="
                 },
                 button {
+                    onclick: move |_| {
+                        reset_op();
+                    },
+                    "C"
+                },
+                button {
+                    onclick: move |_| {
+                        push_op(Op::Add);
+                    },
                     "+"
                 },
                 button {
+                    onclick: move |_| {
+                        push_op(Op::Sub);
+                    },
                     "-"
                 },
                 button {
+                    onclick: move |_| {
+                        push_op(Op::Mul);
+                    },
                     "*"
                 },
+                button {
+                    onclick: move |_| {
+                        push_op(Op::Div);
+                    },
+                    "/"
+                },
+                button {
+                    " "
+                }
             }
         }
     })
