@@ -8,4 +8,5 @@ A simple calculator in Dioxus (learning project)
 
 Ensure you have the Rust toolchain installed (e.g. through `rustup`).
 Build & run with `cargo run --release` (ensure you have the [Dioxus dependencies](https://dioxuslabs.com/learn/0.4/getting_started/desktop#platform-specific-dependencies) installed in your system)
+
 Use just `cargo build --release` to just build a binary.
