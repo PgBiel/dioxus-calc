@@ -31,10 +31,18 @@ impl Op {
 fn App(cx: Scope) -> Element {
     // Currently visible input.
     let input = use_state::<i64>(cx, || 0);
+    // If input should be cleared on the next digit.
+    // Toggled on when an operation is selected (the LHS still displays, but RHS will begin with the next digit).
+    let input_should_clear = use_state::<bool>(cx, || false);
     // Append a digit at the end of the input.
     let push_digit = move |digit: u8| {
         assert!(digit < 10);
-        let current = *input.get();
+        let current = if *input_should_clear.get() {
+            // clear input as needed
+            0
+        } else {
+            *input.get()
+        };
         let sign = if current < 0 { -1 } else { 1 };
         input.set(current * 10 + sign * (digit as i64));
     };
@@ -52,6 +60,7 @@ fn App(cx: Scope) -> Element {
     let reset_op = || {
         operation.set(None);
         lhs.set(None);
+        input_should_clear.set(false);
     };
     // Applies the current operation between the current LHS and the input as RHS, if possible.
     let apply_op = move || {
@@ -66,8 +75,9 @@ fn App(cx: Scope) -> Element {
         // Use the output from the previous operation (if any) as the next's LHS.
         // Otherwise, use the current input.
         push_lhs();
-        // reset input (temp solution)
-        input.set(0);
+        // Ensure the user will type the RHS afterwards.
+        // Otherwise, use the LHS (still displayed if the user doesn't tyep) as RHS.
+        input_should_clear.set(true);
         operation.set(Some(op));
     };
     cx.render(rsx! {
