@@ -113,78 +113,114 @@ fn App(cx: Scope) -> Element {
                 grid_template_columns: "repeat(3, 2rem)",
                 grid_auto_flow: "row",
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_digit(1),
                     "1"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_digit(2),
                     "2"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_digit(3),
                     "3"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_digit(4),
                     "4"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_digit(5),
                     "5"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_digit(6),
                     "6"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_digit(7),
                     "7"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_digit(8),
                     "8"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_digit(9),
                     "9"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| pop_digit(),
                     "D"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_digit(0),
                     "0"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| {
                         apply_op();
                     },
                     "="
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| {
                         reset_op();
                     },
                     "C"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_op(Op::Add),
                     "+"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_op(Op::Sub),
                     "-"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_op(Op::Mul),
                     "*"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     onclick: move |_| push_op(Op::Div),
                     "/"
                 },
                 button {
+                    background_color: "blue",
+                    color: "white",
                     " "
                 }
             }
