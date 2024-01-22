@@ -39,21 +39,27 @@ fn App(cx: Scope) -> Element {
     // If input should be cleared on the next digit.
     // Toggled on when an operation is selected (the LHS still displays, but RHS will begin with the next digit).
     let input_should_clear = use_state::<bool>(cx, || false);
-    // Append a digit at the end of the input.
-    let push_digit = move |digit: u8| {
-        assert!(digit < 10);
-        let current = if *input_should_clear.get() {
-            // clear input as needed
+    // Get input or clear it if needed.
+    let get_input_or_clear = move || {
+        if *input_should_clear.get() {
+            input_should_clear.set(false);
+            input.set(0);
             0
         } else {
             *input.get()
-        };
+        }
+    };
+    // Append a digit at the end of the input.
+    let push_digit = move |digit: u8| {
+        assert!(digit < 10);
+        let current = get_input_or_clear();
         let sign = if current < 0 { -1 } else { 1 };
         input.set(current * 10 + sign * (digit as i64));
     };
     // Remove a digit from the input.
-    let pop_digit = || {
-        input.set(input.get() / 10);
+    let pop_digit = move || {
+        let current = get_input_or_clear();
+        input.set(current / 10);
     };
     // Currently selected operation.
     let operation = use_state::<Option<Op>>(cx, || None);
@@ -100,7 +106,7 @@ fn App(cx: Scope) -> Element {
                                 push_digit(digit);
                             }
                         } else if key == "-" {
-                            if *input.get() == 0 {
+                            if get_input_or_clear() == 0 {
                                 // negative number
                                 input.set(-1)
                             }
